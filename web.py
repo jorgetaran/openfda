@@ -83,9 +83,7 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         return events
 
     def get_events(self):
-        ##
-        #GET EVENT
-        ##
+
 
         conn = http.client.HTTPSConnection(self.OPENFDA_API_URL)
         conn.request('GET', self.OPENFDA_API_EVENT + '?limit=10')
@@ -95,7 +93,6 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         print (r1.status,r1.reason)
 
         data1 = r1.read()
-        #print (data1)
 
         data = data1.decode('utf8')
         events = json.loads(data)
@@ -144,14 +141,7 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             self.wfile.write(bytes(html,'utf8'))
 
         elif 'searchDrug' in self.path:
-            drug = self.path.split('=')[1] #Hace lo mismo que lo que esta con # pero es mas facil
-            #s=self.path
-            #print(s)
-            #d=s.split('=')
-            #print (d)
-            #drug=d[1]
-            #print (drug)
-
+            drug = self.path.split('=')[1] 
             events = self.get_med(drug)
             com_num = self.get_company_numb(events)
             html = self.drug_page(com_num)
