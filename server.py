@@ -2,9 +2,7 @@ import socketserver
 import web
 
 
-##
-#WEB SERVER
-##
+
 PORT = 8000
 
 Handler = web.testHTTPRequestHandler
