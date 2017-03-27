@@ -19,6 +19,7 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
                 <h1>OpenFDA Client</h1>
                 <form method='get' action='listDrugs'>
                     <input type='submit' value='List Drugs'></input>
+                    Limit:<input type='text' name='limit'></input>
                 </form>
 
                 <form method='get' action='searchDrug'>
@@ -27,13 +28,20 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
                 </form>
 
                 <form method='get' action='listCompanies'>
-                    <input type='submit' value='Search companies'></input>
+                    <input type='submit' value='List companies'></input>
+                    Limit:<input type='text' name='limit'></input>
                 </form>
 
                 <form method='get' action='searchCompany'>
                     <input type='text' name='company'> </input>
                     <input type='submit' value='Search company'></input>
                 </form>
+
+                <form method='get' action='Gender'>
+                    <input type='submit' value='List Gender'></input>
+                    Limit:<input type='text' name='limit'></input>
+                </form>
+
 
             </body>
         </html>
@@ -82,11 +90,11 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         events = json.loads(data)
         return events
 
-    def get_events(self):
+    def get_events(self,limit):
 
 
         conn = http.client.HTTPSConnection(self.OPENFDA_API_URL)
-        conn.request('GET', self.OPENFDA_API_EVENT + '?limit=10')
+        conn.request('GET', self.OPENFDA_API_EVENT + '?limit='+ limit)
 
         r1=conn.getresponse()
 
@@ -97,6 +105,12 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         data = data1.decode('utf8')
         events = json.loads(data)
         return events
+
+    def get_Gender(self,events):
+        gender=[]
+        for event in events['results']:
+            gender+=[event['patient']['patientsex']]
+        return gender
 
     def get_drug(self,events):
         medicamentos=[]
@@ -117,9 +131,9 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         <html>
             <head></head>
                 <body>
-                    <ul>
+                    <ol>
                         %s
-                    </ul>
+                    </ol>
                 </body>
         </html>
         '''%(s)
@@ -135,20 +149,22 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             self.wfile.write(bytes(html,'utf8'))
 
         elif 'listDrugs' in self.path:
-            events = self.get_events()
+            limit = self.path.split('=')[1]
+            events = self.get_events(limit)
             medicamentos = self.get_drug(events)
             html = self.drug_page(medicamentos)
             self.wfile.write(bytes(html,'utf8'))
 
         elif 'searchDrug' in self.path:
-            drug = self.path.split('=')[1] 
+            drug = self.path.split('=')[1]
             events = self.get_med(drug)
             com_num = self.get_company_numb(events)
             html = self.drug_page(com_num)
             self.wfile.write(bytes(html,'utf8'))
 
         elif 'listCompanies' in self.path:
-            events = self.get_events()
+            limit = self.path.split('=')[1]
+            events = self.get_events(limit)
             company = self.get_company_numb(events)
             html = self.drug_page(company)
             self.wfile.write(bytes(html,'utf8'))
@@ -160,6 +176,12 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             html = self.drug_page(med)
             self.wfile.write(bytes(html,'utf8'))
 
+        elif 'Gender' in self.path:
+            limit = self.path.split('=')[1]
+            events = self.get_events(limit)
+            gend = self.get_Gender(events)
+            html = self.drug_page(gend)
+            self.wfile.write(bytes(html,'utf8'))
 
         return
 
