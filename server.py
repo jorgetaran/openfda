@@ -5,6 +5,8 @@ import web
 
 PORT = 8000
 
+socketserver.TCPServer.allow_rehuse_address = True
+
 Handler = web.testHTTPRequestHandler
 
 httpd = socketserver.TCPServer(("", PORT), Handler)
