@@ -37,7 +37,7 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
                     <input type='submit' value='Search company'></input>
                 </form>
 
-                <form method='get' action='Gender'>
+                <form method='get' action='listGender'>
                     <input type='submit' value='List Gender'></input>
                     Limit:<input type='text' name='limit'></input>
                 </form>
@@ -176,7 +176,7 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             html = self.drug_page(med)
             self.wfile.write(bytes(html,'utf8'))
 
-        elif 'Gender' in self.path:
+        elif 'listGender' in self.path:
             limit = self.path.split('=')[1]
             events = self.get_events(limit)
             gend = self.get_Gender(events)
