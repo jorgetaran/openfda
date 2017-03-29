@@ -139,14 +139,14 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         '''%(s)
         return html
 
-        def errorhtml(self):
-            html='''
-            <html>
-                <head></head>
-                <body><h1>ERROR 404 FILE NOT FOUND</h1></body>
-            </html>
-            '''
-            return html
+    def errorhtml(self):
+        html='''
+        <html>
+            <head></head>
+            <body><h1>ERROR 404 FILE NOT FOUND</h1></body>
+        </html>
+        '''
+        return html
 
     def do_GET(self):
 
@@ -197,7 +197,7 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(bytes(html,'utf8'))
 
-        
+
         return
 
 
