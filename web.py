@@ -139,50 +139,65 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         '''%(s)
         return html
 
+        def errorhtml(self):
+            html='''
+            <html>
+                <head></head>
+                <body><h1>ERROR 404 FILE NOT FOUND</h1></body>
+            </html>
+            '''
+            return html
+
     def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type','text/html')
-        self.end_headers()
 
         if self.path == '/':
             html = self.get_main_page()
-            self.wfile.write(bytes(html,'utf8'))
+            self.send_response(200)
 
         elif 'listDrugs' in self.path:
             limit = self.path.split('=')[1]
             events = self.get_events(limit)
             medicamentos = self.get_drug(events)
             html = self.drug_page(medicamentos)
-            self.wfile.write(bytes(html,'utf8'))
+            self.send_response(200)
 
         elif 'searchDrug' in self.path:
             drug = self.path.split('=')[1]
             events = self.get_med(drug)
             com_num = self.get_company_numb(events)
             html = self.drug_page(com_num)
-            self.wfile.write(bytes(html,'utf8'))
+            self.send_response(200)
 
         elif 'listCompanies' in self.path:
             limit = self.path.split('=')[1]
             events = self.get_events(limit)
             company = self.get_company_numb(events)
             html = self.drug_page(company)
-            self.wfile.write(bytes(html,'utf8'))
+            self.send_response(200)
 
         elif 'searchCompany' in self.path:
             company = self.path.split('=')[1]
             events = self.get_medicinalproduct(company)
             med = self.get_drug(events)
             html = self.drug_page(med)
-            self.wfile.write(bytes(html,'utf8'))
+            self.send_response(200)
 
         elif 'listGender' in self.path:
             limit = self.path.split('=')[1]
             events = self.get_events(limit)
             gend = self.get_Gender(events)
             html = self.drug_page(gend)
-            self.wfile.write(bytes(html,'utf8'))
+            self.send_response(200)
 
+        else:
+            html = self.errorhtml()
+            self.send_response(404)
+
+        self.send_header('Content-type','text/html')
+        self.end_headers()
+        self.wfile.write(bytes(html,'utf8'))
+
+        
         return
 
 
