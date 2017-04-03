@@ -5,7 +5,7 @@ import web
 
 PORT = 8000
 
-socketserver.TCPServer.allow_rehuse_address = True
+socketserver.TCPServer.allow_reuse_address = True
 
 Handler = web.testHTTPRequestHandler
 
