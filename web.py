@@ -20,8 +20,8 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
                 <form method='get' action='listDrugs'>
                     <input type='submit' value='List Drugs'></input>
                     Limit:<input type='text' name='limit'></input>
-                </form>
 
+                </form>
                 <form method='get' action='searchDrug'>
                     <input type='text' name='drug'> </input>
                     <input type='submit' value='Search Drug'></input>
@@ -153,7 +153,6 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         if self.path == '/':
             html = self.get_main_page()
             self.send_response(200)
-
         elif 'listDrugs' in self.path:
             limit = self.path.split('=')[1]
             events = self.get_events(limit)
@@ -161,12 +160,14 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             html = self.drug_page(medicamentos)
             self.send_response(200)
 
+
         elif 'searchDrug' in self.path:
             drug = self.path.split('=')[1]
             events = self.get_med(drug)
             com_num = self.get_company_numb(events)
             html = self.drug_page(com_num)
             self.send_response(200)
+
 
         elif 'listCompanies' in self.path:
             limit = self.path.split('=')[1]
@@ -196,7 +197,6 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         self.send_header('Content-type','text/html')
         self.end_headers()
         self.wfile.write(bytes(html,'utf8'))
-
 
         return
 
