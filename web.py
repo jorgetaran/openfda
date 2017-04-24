@@ -146,12 +146,19 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         if self.path == '/':
             html = HTML.get_main_page()
             self.send_response(200)
+            self.send_header('Content-type','text/html')
+            self.end_headers()
+            self.wfile.write(bytes(html,'utf8'))
+
         elif 'listDrugs' in self.path:
             limit = self.path.split('=')[1]
             events = client.get_events(limit)
             medicamentos = Parser.get_drug(events)
             html = HTML.drug_page(medicamentos)
             self.send_response(200)
+            self.send_header('Content-type','text/html')
+            self.end_headers()
+            self.wfile.write(bytes(html,'utf8'))
 
 
         elif 'searchDrug' in self.path:
@@ -160,6 +167,9 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             com_num = Parser.get_company_numb(events)
             html = HTML.drug_page(com_num)
             self.send_response(200)
+            self.send_header('Content-type','text/html')
+            self.end_headers()
+            self.wfile.write(bytes(html,'utf8'))
 
 
         elif 'listCompanies' in self.path:
@@ -168,6 +178,9 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             company = Parser.get_company_numb(events)
             html = HTML.drug_page(company)
             self.send_response(200)
+            self.send_header('Content-type','text/html')
+            self.end_headers()
+            self.wfile.write(bytes(html,'utf8'))
 
         elif 'searchCompany' in self.path:
             company = self.path.split('=')[1]
@@ -175,6 +188,9 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             med = Parser.get_drug(events)
             html = HTML.drug_page(med)
             self.send_response(200)
+            self.send_header('Content-type','text/html')
+            self.end_headers()
+            self.wfile.write(bytes(html,'utf8'))
 
         elif 'listGender' in self.path:
             limit = self.path.split('=')[1]
@@ -182,14 +198,29 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             gend = Parser.get_Gender(events)
             html = HTML.drug_page(gend)
             self.send_response(200)
+            self.send_header('Content-type','text/html')
+            self.end_headers()
+            self.wfile.write(bytes(html,'utf8'))
+
+        elif 'secret' in self.path:
+            self.send_response(401)
+            self.send_header('WWW-Authenticate','basic Realm=simple')
+            self.end_headers()
+
+        elif 'redirect' in self.path:
+            self.send_response(302)
+            self.send_header('location','http://localhost:8000')
+            self.end_headers()
+
 
         else:
             html = HTML.errorhtml()
             self.send_response(404)
+            self.send_header('Content-type','text/html')
+            self.end_headers()
+            self.wfile.write(bytes(html,'utf8'))
 
-        self.send_header('Content-type','text/html')
-        self.end_headers()
-        self.wfile.write(bytes(html,'utf8'))
+
 
         return
 
